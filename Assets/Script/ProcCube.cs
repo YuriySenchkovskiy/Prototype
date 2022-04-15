@@ -6,6 +6,30 @@ public class ProcCube: Object
 {
     public enum Cubeside { BOTTOM, TOP, LEFT, RIGHT, FRONT, BACK };
 
+    static GameObject cube;
+
+    public static GameObject Clone(Vector3 pos)
+    {
+        // создаем первый куб, который будем копировать из памяти
+        if (cube == null)
+        {
+            CreateCube(Vector3.zero);
+            cube.SetActive(false);
+        }
+        GameObject cubeClone = new GameObject();
+        cubeClone.AddComponent<MeshFilter>();
+        cubeClone.AddComponent<MeshRenderer>();
+        cubeClone.GetComponent<MeshFilter>().mesh = cube.GetComponent<MeshFilter>().mesh;
+        MeshRenderer rend = cubeClone.GetComponent<MeshRenderer>();
+        rend.material = cube.GetComponent<MeshRenderer>().material;
+        cubeClone.AddComponent<Rigidbody>();
+        cubeClone.AddComponent<BoxCollider>();
+        cubeClone.name = "Cube(Clone)";
+        cubeClone.gameObject.SetActive(true);
+        cubeClone.transform.position = pos;
+        return cubeClone;
+    }
+    
     public static void CreateQuad(Cubeside side, GameObject parent)
     {
         Mesh mesh = new Mesh();
@@ -93,7 +117,7 @@ public class ProcCube: Object
 
     public static void CreateCube(Vector3 pos)
     {
-        GameObject cube = new GameObject();
+        cube = new GameObject();
         cube.AddComponent<MeshFilter>();
         cube.AddComponent<MeshRenderer>();
         CreateQuad(Cubeside.FRONT, cube);
@@ -128,5 +152,15 @@ public class ProcCube: Object
             i++; 
         }
 
+        cube.GetComponent<MeshFilter>().mesh = new Mesh();
+        cube.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
+        cube.GetComponent<MeshFilter>().mesh.name = "CreatedCube_" + Time.realtimeSinceStartup;
+        MeshRenderer rend = cube.GetComponent<MeshRenderer>();
+        rend.material = new Material(Shader.Find("Holistic/Plasma"));
+        cube.AddComponent<Rigidbody>();
+        cube.AddComponent<BoxCollider>();
+        cube.name = "Cube";
+        cube.gameObject.SetActive(true);
+        cube.transform.position = pos;
     }
 }

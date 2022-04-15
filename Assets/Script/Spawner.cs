@@ -1,12 +1,12 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    public GameObject cubeprefab;
+    public GameObject sphereprefab;
 
-    [SerializeField] private GameObject cubePrefab;
-    
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +16,9 @@ public class Spawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Instantiate(cubePrefab, this.transform.position, Quaternion.identity);
+        if(Random.Range(0,100) < 10)
+            Instantiate(cubeprefab, this.transform.position, Quaternion.identity);
+        else if(Random.Range(0,100) < 10)
+            Instantiate(sphereprefab, this.transform.position, Quaternion.identity);
     }
 }
